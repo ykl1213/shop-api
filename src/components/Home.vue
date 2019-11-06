@@ -49,17 +49,11 @@ export default {
       this.$router.push('/login')
     }
   },
-  created () {
-    this.$axios({
-      method: 'get',
-      url: 'menus'
-    }).then(res => {
-      const { meta, data } = res
-      console.log(res)
-      if (meta.status === 200) {
-        this.menusList = data
-      }
-    })
+  async created () {
+    const { meta, data } = await this.$axios.get('menus')
+    if (meta.status === 200) {
+      this.menusList = data
+    }
   },
   computed: {
     aside () {

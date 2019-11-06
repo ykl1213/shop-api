@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data () {
     return {
@@ -39,23 +38,16 @@ export default {
   },
   methods: {
     submitForm () {
-      this.$refs.form.validate((valid) => {
+      this.$refs.form.validate(async valid => {
         if (!valid) return false
-        axios({
-          method: 'post',
-          url: 'http://localhost:8888/api/private/v1/login',
-          data: this.form
-        }).then((res) => {
-          const { meta, data } = res.data
-          console.log(res)
-          if (meta.status !== 200) {
-            this.$message.error(meta.msg)
-          } else {
-            localStorage.setItem('token', data.token)
-            this.$router.push('/home')
-            this.$message.success('登录成功')
-          }
-        })
+        const { meta, data } = await this.$axios.post('login', this.form)
+        if (meta.status !== 200) {
+          this.$message.error(meta.msg)
+        } else {
+          localStorage.setItem('token', data.token)
+          this.$router.push('/home')
+          this.$message.success('登录成功')
+        }
       })
     },
     resetForm () {
